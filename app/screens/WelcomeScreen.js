@@ -1,10 +1,27 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, View, Image, Text,Alert, Modal, TouchableHighlight, TextInput } from 'react-native';
 import colors from '../config/colors';
+import AuthService from '../../services/auth.service'
 
-function WelcomeScreen() {
+function WelcomeScreen({navigation}, props) {
     const [logModalVisible, setLogModalVisible] = useState(false);
     const [regModalVisible, setRegModalVisible] = useState(false);
+    const [userEmail, setUserEmail] = useState('')
+    const [userPassword, setUserPassword] = useState('')
+    const [newUsername, setNewUsername] = useState('');
+    const [newEmail, setNewEmail] = useState('')
+    const [newPassword, setNewPassword] = useState('')
+
+    function login(mail, pass){
+        AuthService.login(mail, pass)
+    }
+
+    function signIn(name, mail, pass){
+        AuthService.login(name, mail, pass)
+        alert('Your account have been successfully registered!')
+        setRegModalVisible(false)
+    }
+
     return (
         <ImageBackground 
         style={styles.background}
@@ -21,15 +38,17 @@ function WelcomeScreen() {
                         <Text style={styles.title}>Login</Text>
                         <View style={styles.modalContainer}>
                             <Text style={styles.modalText}>Mail</Text>
-                            <TextInput style={styles.modalTextInput}/>
+                            <TextInput onChangeText={(text)=> setUserEmail(text)} value={userEmail} textContentType='emailAddress' clearButtonMode='while-editing' keyboardType='email-address' autoCompleteType='email' style={styles.modalTextInput}/>
                         </View>
                         <View style={styles.modalContainer}>
                             <Text style={styles.modalText}>Password</Text>
-                            <TextInput style={styles.modalTextInput}/>
+                            <TextInput onChangeText={(text)=> setUserPassword(text)} value={userPassword} textContentType='password' clearButtonMode='while-editing' style={styles.modalTextInput}/>
                         </View>
                         <TouchableHighlight
                             style={{...styles.openButton, backgroundColor: colors.secondary, marginBottom: 25,}}
-                            onPress={() => {setLogModalVisible(false)}}
+                            onPress={() => {
+                                login(userEmail, userPassword)
+                            }}
                         >
                             <Text style={styles.textStyle}>Login</Text>
                         </TouchableHighlight>
@@ -56,18 +75,24 @@ function WelcomeScreen() {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                    <Text style={styles.title}>Sign in</Text>
+                        <Text style={styles.title}>Sign in</Text>
+                        <View style={styles.modalContainer}>
+                            <Text style={styles.modalText}>Pseudo</Text>
+                            <TextInput onChangeText={(text)=> setNewUsername(text)} value={newUsername} clearButtonMode='while-editing' autoCompleteType='username' style={styles.modalTextInput}/>
+                        </View>
                         <View style={styles.modalContainer}>
                             <Text style={styles.modalText}>Mail</Text>
-                            <TextInput style={styles.modalTextInput}/>
+                            <TextInput onChangeText={(text)=> setNewEmail(text)} value={newEmail} textContentType='emailAddress' clearButtonMode='while-editing' keyboardType='email-address' autoCompleteType='email' style={styles.modalTextInput}/>
                         </View>
                         <View style={styles.modalContainer}>
                             <Text style={styles.modalText}>Password</Text>
-                            <TextInput style={styles.modalTextInput}/>
+                            <TextInput onChangeText={(text)=> setNewPassword(text)} value={newPassword} textContentType='password' clearButtonMode='while-editing' style={styles.modalTextInput}/>
                         </View>
                         <TouchableHighlight
                             style={{...styles.openButton, backgroundColor: colors.primary, marginBottom: 25,}}
-                            onPress={() => {setRegModalVisible(false)}}
+                            onPress={() => {
+                                signIn(newUsername, newEmail, newPassword)
+                            }}
                         >
                             <Text style={styles.textStyle}>Sign in</Text>
                         </TouchableHighlight>
@@ -181,3 +206,4 @@ const styles = StyleSheet.create({
 })
 
 export default WelcomeScreen;
+

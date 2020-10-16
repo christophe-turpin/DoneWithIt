@@ -4,6 +4,7 @@ import { Image, SafeAreaView, StyleSheet, View, Text } from 'react-native';
 import colors from '../config/colors'
 
 function ViewImageScreen(props) {
+    const user = props.user
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.closeIcon}></View>
